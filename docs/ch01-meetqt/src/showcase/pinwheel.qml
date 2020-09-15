@@ -35,6 +35,7 @@ Item {
     height: background.height
 
     Image {
+        // 取图片的大小
         id: background
         source: "images/background.png"
     }

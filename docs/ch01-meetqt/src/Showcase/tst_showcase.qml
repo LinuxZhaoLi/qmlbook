@@ -1,29 +1,3 @@
-/*
- * Copyright (c) 2013, Juergen Bocklage-Ryannel, Johan Thelin
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the editors nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 
 import QtQuick 2.5
 import QtTest 1.1
@@ -31,7 +5,7 @@ import QtTest 1.1
 Showcase {
     id: root
 
-
+// 表示单元测试用例
     TestCase {
         id: testCase
         name: 'showcase'
@@ -41,16 +15,22 @@ Showcase {
 
 
         function test_shoot() {
-            var shoot = false;
+            var shoot = false;  // 将项目抓取到内存映像中。
             root.grabToImage(function(result) {
-                result.saveToFile("../../assets/showcase.png");
+                result.saveToFile("../../assets/1.png");
+                print("111111111111")
                 shots++;
             });
+
+            // function mouseClick(item, x, y, button, modifiers, delay)
             mouseClick(root);
+             wait(1000);
             mouseClick(root);
+             wait(1000);
             mouseClick(root);
+             wait(1000);
             mouseClick(root);
-            wait(100);
+            wait(1000);
             root.grabToImage(function(result) {
                 result.saveToFile("../../assets/showcase2.png");
                 shots++;
@@ -65,8 +45,54 @@ Showcase {
                 result.saveToFile("../../assets/showcase4.png");
                 shots++;
             });
-            tryCompare(testCase, "shots", 4);
+
+            /*
+如果obj上指定的属性与预期的不同，则当前测试用例失败，并显示可选消息。将多次重试测试，直到达到超时（毫秒）。
+此函数用于测试属性基于异步事件更改值的应用程序。使用compare（）测试同步属性更改。
+*/
+            tryCompare(testCase, "shots", 5);
+
+
         }
     }
+
+    // 下面的代码片段演示如何获取项并将结果存储到文件中。
 }
 
+/*
+    function tryCompare(obj, prop, value, timeout, msg) {
+        if (arguments.length == 1 || (typeof(prop) != "string" && typeof(prop) != "number")) {
+            qtest_results.fail("A property name as string or index is required for tryCompare",
+                        util.callerFile(), util.callerLine())
+            throw new Error("QtQuickTest::fail")
+        }
+        if (arguments.length == 2) {
+            qtest_results.fail("A value is required for tryCompare",
+                        util.callerFile(), util.callerLine())
+            throw new Error("QtQuickTest::fail")
+        }
+        if (timeout !== undefined && typeof(timeout) != "number") {
+            qtest_results.fail("timeout should be a number",
+                        util.callerFile(), util.callerLine())
+            throw new Error("QtQuickTest::fail")
+        }
+        if (!timeout)
+            timeout = 5000
+        if (msg === undefined)
+            msg = "property " + prop
+        if (!qtest_compareInternal(obj[prop], value))
+            wait(0)
+        var i = 0
+        while (i < timeout && !qtest_compareInternal(obj[prop], value)) {
+            wait(50)
+            i += 50
+        }
+        var actual = obj[prop]
+        var act = qtest_results.stringify(actual)
+        var exp = qtest_results.stringify(value)
+        var success = qtest_compareInternal(actual, value)
+        if (!qtest_results.compare(success, msg, act, exp, util.callerFile(), util.callerLine()))
+            throw new Error("QtQuickTest::fail")
+    }
+
+*/

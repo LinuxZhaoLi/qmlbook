@@ -1,34 +1,10 @@
-/*
- * Copyright (c) 2013, Juergen Bocklage-Ryannel, Johan Thelin
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *     * Redistributions of source code must retain the above copyright
- *       notice, this list of conditions and the following disclaimer.
- *     * Redistributions in binary form must reproduce the above copyright
- *       notice, this list of conditions and the following disclaimer in the
- *       documentation and/or other materials provided with the distribution.
- *     * Neither the name of the editors nor the
- *       names of its contributors may be used to endorse or promote products
- *       derived from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
- * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
- * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
- * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+
 
 // showcase.qml
 
 import QtQuick 2.5
 import QtGraphicalEffects 1.0
+// 降低颜色的饱和度
 
 Image {
     id: root
@@ -43,20 +19,35 @@ Image {
         source: "images/pole.png"
     }
 
+    /*
+保持应用于此层的效果。
 
+该效果通常是ShaderEffect组件，尽管可以指定任何项组件。该效果应具有名称匹配的源纹理属性layer.samplerName.
+
+另请参见layer.samplerName和项目层。
+
+*/
     Image {
         id: wheel
         anchors.centerIn: parent
         source: "images/pinwheel.png"
-        Behavior on rotation {
+        Behavior on rotation {              // 动画作用于
             NumberAnimation {
                 duration: 250
             }
         }
-        layer.effect: FastBlur {
+
+        /*
+FastBlur提供的模糊质量低于GaussianBlur，但渲染速度更快。
+FastBlur效果通过使用源内容降尺度和双线性滤波的算法对源内容进行模糊处理，
+从而软化源内容。在源内容快速变化且不需要最高模糊质量的情况下使用此效果。
+*/    // item
+        layer.effect: FastBlur {  // 层
             id: blur
             radius: root.blurRadius
+
             Behavior on radius {
+
                 NumberAnimation {
                     duration: 250
                 }
@@ -69,7 +60,7 @@ Image {
         anchors.fill: parent
         onPressed: {
             wheel.rotation += 90
-            root.blurRadius = 16
+            root.blurRadius = 16   //不透明度
         }
         onReleased: {
             root.blurRadius = 0
